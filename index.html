@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="description" content="Chit-Chat – simple two-way speech translator" />
+  <link rel="icon" href="icon.jpg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="icon.jpg" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Chit-Chat 🗣️</title>
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --accent: #e94560;
+      --accent2: #0f3460;
+      --text: #eaeaea;
+      --muted: #a0a0b0;
+      --success: #00d9a0;
+      --left: #4fc3f7;
+      --right: #ff8a65;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .logo {
+      width: 96px;
+      height: 96px;
+      border-radius: 24px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(233,69,96,0.3);
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    h1 span { color: var(--accent); }
+    .subtitle { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+
+    /* Language selectors */
+    .lang-bar {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+      margin: 12px 0 16px;
+    }
+    .lang-select {
+      flex: 1;
+      background: var(--card);
+      border: 2px solid #2a2a40;
+      border-radius: 14px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0a0b0'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+    }
+    .lang-select:focus { outline: none; border-color: var(--accent); }
+    .lang-select.left-border { border-color: var(--left); }
+    .lang-select.right-border { border-color: var(--right); }
+
+    /* Main area */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 480px;
+      gap: 16px;
+    }
+    .side {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .side.active-left { border-color: var(--left); }
+    .side.active-right { border-color: var(--right); }
+    .side-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+    }
+    .speak-btn {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: none;
+      font-size: 3.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .speak-btn:active { transform: scale(0.94); }
+    .speak-btn.left {
+      background: linear-gradient(145deg, #4fc3f7, #0288d1);
+    }
+    .speak-btn.right {
+      background: linear-gradient(145deg, #ff8a65, #e64a19);
+    }
+    .speak-btn.listening {
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(233,69,96,0.6); }
+      70% { box-shadow: 0 0 0 18px rgba(233,69,96,0); }
+      100% { box-shadow: 0 0 0 0 rgba(233,69,96,0); }
+    }
+    .transcript {
+      width: 100%;
+      min-height: 48px;
+      background: #12121f;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text);
+      word-break: break-word;
+    }
+    .transcript .label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .status {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-height: 22px;
+      padding: 4px;
+    }
+    .status.error { color: var(--accent); }
+    .status.success { color: var(--success); }
+    .status.downloading { color: #ffd54f; }
+
+    .swap-btn {
+      align-self: center;
+      background: var(--accent2);
+      border: none;
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .swap-btn:active { transform: scale(0.92); }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .hint {
+      background: #1e1e30;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 480px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="icon.jpg" alt="Chit-Chat" class="logo" />
+    <h1>Chit<span>-Chat</span> 🗣️</h1>
+    <p class="subtitle">Tap a side • Speak • Hear the other language</p>
+  </header>
+
+  <div class="hint" id="hint">
+    Best in <b>Chrome or Edge</b>. First use of a language may download a model (status bar shows progress). Use the Test box below if mic is not available.
+  </div>
+
+  <div class="lang-bar">
+    <select id="langLeft" class="lang-select left-border" aria-label="Left language"></select>
+    <select id="langRight" class="lang-select right-border" aria-label="Right language"></select>
+  </div>
+
+  <div class="main">
+    <!-- LEFT SIDE -->
+    <div class="side" id="sideLeft">
+      <div class="side-label">Left speaker</div>
+      <button class="speak-btn left" id="btnLeft" aria-label="Speak left language">🗣️</button>
+      <div class="transcript" id="outLeft">
+        <span class="label">You said / Translation</span>
+        <span id="textLeft">—</span>
+      </div>
+    </div>
+
+    <button class="swap-btn" id="btnSwap" title="Swap languages">⇄</button>
+
+    <!-- RIGHT SIDE -->
+    <div class="side" id="sideRight">
+      <div class="side-label">Right speaker</div>
+      <button class="speak-btn right" id="btnRight" aria-label="Speak right language">🗣️</button>
+      <div class="transcript" id="outRight">
+        <span class="label">You said / Translation</span>
+        <span id="textRight">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">Ready</div>
+
+  <!-- Quick text test (no mic needed) -->
+  <div style="width:100%;max-width:480px;margin-top:12px;display:flex;gap:8px;">
+    <input id="testInput" type="text" placeholder="Type text to test translate → speak" 
+           style="flex:1;padding:10px 12px;border-radius:12px;border:2px solid #2a2a40;background:#1a1a2e;color:#eaeaea;font-size:0.95rem;" />
+    <button id="btnTest" style="padding:10px 16px;border-radius:12px;border:none;background:#e94560;color:white;font-weight:600;cursor:pointer;">Test</button>
+  </div>
+
+  <footer>
+    Chit-Chat • Free • On-device speech + translation when supported
+  </footer>
+
+  <script>
+    // ---------- Language list (common Web Speech + Translator codes) ----------
+    const LANGUAGES = [
+      { code: "en-US", name: "English (US)", short: "en" },
+      { code: "en-GB", name: "English (UK)", short: "en" },
+      { code: "es-ES", name: "Spanish", short: "es" },
+      { code: "fr-FR", name: "French", short: "fr" },
+      { code: "de-DE", name: "German", short: "de" },
+      { code: "it-IT", name: "Italian", short: "it" },
+      { code: "pt-BR", name: "Portuguese (BR)", short: "pt" },
+      { code: "pt-PT", name: "Portuguese (PT)", short: "pt" },
+      { code: "zh-CN", name: "Chinese (Simplified)", short: "zh" },
+      { code: "zh-TW", name: "Chinese (Traditional)", short: "zh-Hant" },
+      { code: "ja-JP", name: "Japanese", short: "ja" },
+      { code: "ko-KR", name: "Korean", short: "ko" },
+      { code: "ru-RU", name: "Russian", short: "ru" },
+      { code: "hi-IN", name: "Hindi", short: "hi" },
+      { code: "ar-SA", name: "Arabic", short: "ar" },
+      { code: "nl-NL", name: "Dutch", short: "nl" },
+      { code: "pl-PL", name: "Polish", short: "pl" },
+      { code: "tr-TR", name: "Turkish", short: "tr" },
+      { code: "vi-VN", name: "Vietnamese", short: "vi" },
+      { code: "th-TH", name: "Thai", short: "th" },
+      { code: "id-ID", name: "Indonesian", short: "id" },
+      { code: "sv-SE", name: "Swedish", short: "sv" },
+      { code: "uk-UA", name: "Ukrainian", short: "uk" },
+    ];
+
+    // ---------- DOM ----------
+    const langLeft = document.getElementById("langLeft");
+    const langRight = document.getElementById("langRight");
+    const btnLeft = document.getElementById("btnLeft");
+    const btnRight = document.getElementById("btnRight");
+    const btnSwap = document.getElementById("btnSwap");
+    const textLeft = document.getElementById("textLeft");
+    const textRight = document.getElementById("textRight");
+    const statusEl = document.getElementById("status");
+    const sideLeft = document.getElementById("sideLeft");
+    const sideRight = document.getElementById("sideRight");
+    const hint = document.getElementById("hint");
+
+    // Populate selects
+    LANGUAGES.forEach(l => {
+      const o1 = new Option(l.name, l.code);
+      const o2 = new Option(l.name, l.code);
+      langLeft.add(o1);
+      langRight.add(o2);
+    });
+    langLeft.value = "en-US";
+    langRight.value = "es-ES";
+
+    // ---------- Helpers ----------
+    function setStatus(msg, type = "") {
+      statusEl.textContent = msg;
+      statusEl.className = "status " + type;
+    }
+
+    function getShort(code) {
+      const found = LANGUAGES.find(l => l.code === code);
+      return found ? found.short : code.split("-")[0];
+    }
+
+    // ---------- Speech Recognition ----------
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+    let currentSide = null; // "left" | "right"
+
+    function createRecognition(lang) {
+      if (!SpeechRecognition) {
+        setStatus("Speech recognition not supported in this browser", "error");
+        return null;
+      }
+      const rec = new SpeechRecognition();
+      rec.lang = lang;
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      return rec;
+    }
+
+    // Try to download language pack (Chrome experimental)
+    async function ensureLanguagePack(langCode) {
+      if (!window.SpeechRecognition || !SpeechRecognition.available) return true;
+      try {
+        const status = await SpeechRecognition.available({
+          langs: [langCode],
+          processLocally: true
+        });
+        if (status === "available") return true;
+        if (status === "unavailable") {
+          setStatus(`Language pack ${langCode} unavailable offline`, "error");
+          return false;
+        }
+        // downloading or downloadable
+        setStatus(`Downloading language pack for ${langCode}…`, "downloading");
+        const ok = await SpeechRecognition.install({ langs: [langCode], processLocally: true });
+        if (ok) {
+          setStatus(`Language pack ${langCode} ready`, "success");
+          return true;
+        }
+        setStatus(`Failed to download ${langCode}`, "error");
+        return false;
+      } catch (e) {
+        // Older browsers – ignore
+        return true;
+      }
+    }
+
+    // ---------- Translation ----------
+    async function translateText(text, fromCode, toCode) {
+      const source = getShort(fromCode);
+      const target = getShort(toCode);
+      if (source === target) return text;
+
+      const errors = [];
+
+      // 1. Prefer on-device Translator API (Chrome / Edge – downloads models from internet)
+      if ("Translator" in self) {
+        try {
+          setStatus("Checking on-device translator…");
+          let availability = "unavailable";
+          try {
+            availability = await Translator.availability({
+              sourceLanguage: source,
+              targetLanguage: target
+            });
+          } catch (_) {}
+
+          if (availability !== "unavailable") {
+            setStatus("Preparing / downloading translation model…", "downloading");
+            const translator = await Translator.create({
+              sourceLanguage: source,
+              targetLanguage: target,
+              monitor(m) {
+                m.addEventListener("downloadprogress", (e) => {
+                  const pct = Math.round((e.loaded || 0) * 100);
+                  setStatus(`Downloading translation model… ${pct}%`, "downloading");
+                });
+              }
+            });
+            const result = await translator.translate(text);
+            if (result && result.trim()) return result;
+          }
+        } catch (err) {
+          console.warn("Translator API failed", err);
+          errors.push("on-device: " + (err.message || err));
+        }
+      }
+
+      // 2. Google Translate free endpoint (works in many browsers)
+      try {
+        setStatus("Trying Google Translate…");
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data[0] && data[0][0] && data[0][0][0]) {
+            return data[0].map(item => item[0]).join("");
+          }
+        } else {
+          errors.push("gtx status " + res.status);
+        }
+      } catch (e) {
+        console.warn("Google gtx failed", e);
+        errors.push("gtx: " + (e.message || e));
+      }
+
+      // 3. MyMemory free API
+      try {
+        setStatus("Trying MyMemory…");
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const translated = data?.responseData?.translatedText;
+        if (translated &&
+            !String(translated).includes("MYMEMORY WARNING") &&
+            !String(translated).includes("QUERY LENGTH") &&
+            translated.toLowerCase() !== text.toLowerCase()) {
+          return translated;
+        }
+        if (translated) errors.push("MyMemory quota or same text");
+      } catch (e) {
+        console.warn("MyMemory failed", e);
+        errors.push("MyMemory: " + (e.message || e));
+      }
+
+      // 4. Lingva instances (Google proxy, privacy front-ends)
+      const lingvaHosts = [
+        "https://lingva.ml",
+        "https://translate.igna.wtf",
+        "https://lingva.garudalinux.org",
+        "https://translate.projectsegfau.lt",
+        "https://lingva.lunar.icu"
+      ];
+      for (const host of lingvaHosts) {
+        try {
+          setStatus(`Trying ${host.replace("https://","")}…`);
+          const url = `${host}/api/v1/${source}/${target}/${encodeURIComponent(text)}`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.translation && data.translation.trim() &&
+                data.translation.toLowerCase() !== text.toLowerCase()) {
+              return data.translation;
+            }
+          }
+        } catch (e) { /* next */ }
+      }
+
+      console.error("All translation methods failed", errors);
+      throw new Error("Could not translate. Open in Chrome/Edge and allow downloads, or try again later. (" + errors.slice(0,2).join("; ") + ")");
+    }
+
+    // ---------- TTS ----------
+    function speak(text, langCode) {
+      return new Promise((resolve) => {
+        if (!window.speechSynthesis) {
+          setStatus("Text-to-speech not supported", "error");
+          resolve();
+          return;
+        }
+        // Ensure voices are loaded
+        let voices = speechSynthesis.getVoices();
+        if (!voices.length) {
+          speechSynthesis.onvoiceschanged = () => {
+            voices = speechSynthesis.getVoices();
+            doSpeak();
+          };
+          // fallback timeout
+          setTimeout(() => { if (!voices.length) doSpeak(); }, 800);
+        } else {
+          doSpeak();
+        }
+
+        function doSpeak() {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = langCode;
+          utter.rate = 0.95;
+          utter.pitch = 1.0;
+          utter.volume = 1.0;
+          // Prefer a matching voice
+          const match = voices.find(v => v.lang === langCode) ||
+                        voices.find(v => v.lang.startsWith(langCode.split("-")[0])) ||
+                        voices.find(v => v.lang.startsWith(getShort(langCode)));
+          if (match) {
+            utter.voice = match;
+            console.log("Using voice:", match.name, match.lang);
+          }
+          utter.onend = () => resolve();
+          utter.onerror = (e) => {
+            console.warn("TTS error", e);
+            resolve();
+          };
+          speechSynthesis.speak(utter);
+          // Safety timeout in case onend never fires
+          setTimeout(resolve, Math.max(3000, text.length * 80));
+        }
+      });
+    }
+
+    // Pre-load voices
+    if (window.speechSynthesis) {
+      speechSynthesis.getVoices();
+      speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+    }
+
+    // ---------- Core flow ----------
+    async function startListening(side) {
+      if (isListening) {
+        stopListening();
+        return;
+      }
+
+      const fromLang = side === "left" ? langLeft.value : langRight.value;
+      const toLang   = side === "left" ? langRight.value : langLeft.value;
+
+      // Ensure language pack
+      await ensureLanguagePack(fromLang);
+
+      recognition = createRecognition(fromLang);
+      if (!recognition) return;
+
+      currentSide = side;
+      isListening = true;
+
+      if (side === "left") {
+        btnLeft.classList.add("listening");
+        sideLeft.classList.add("active-left");
+        textLeft.textContent = "Listening…";
+      } else {
+        btnRight.classList.add("listening");
+        sideRight.classList.add("active-right");
+        textRight.textContent = "Listening…";
+      }
+      setStatus("Listening… speak now", "success");
+
+      recognition.onresult = async (event) => {
+        stopListening(); // stop the listening UI immediately
+        const transcript = (event.results[0] && event.results[0][0] && event.results[0][0].transcript || "").trim();
+        if (!transcript) {
+          setStatus("No speech detected – try again", "error");
+          return;
+        }
+
+        // Show what was said on the speaking side
+        if (side === "left") {
+          textLeft.textContent = transcript;
+        } else {
+          textRight.textContent = transcript;
+        }
+        setStatus("Got: \"" + transcript.slice(0,40) + (transcript.length>40?"…":"") + "\" – Translating…");
+
+        try {
+          const translated = await translateText(transcript, fromLang, toLang);
+          if (!translated || !translated.trim()) {
+            throw new Error("Empty translation received");
+          }
+
+          // Show translation on the opposite side
+          if (side === "left") {
+            textRight.textContent = translated;
+          } else {
+            textLeft.textContent = translated;
+          }
+
+          setStatus("Speaking: \"" + translated.slice(0,40) + (translated.length>40?"…":"") + "\"", "success");
+          await speak(translated, toLang);
+          setStatus("Done – ready for next", "success");
+        } catch (err) {
+          console.error(err);
+          setStatus(err.message || "Translation failed", "error");
+        }
+      };
+
+      recognition.onerror = (event) => {
+        let msg = "Recognition error";
+        if (event.error === "not-allowed") msg = "Microphone permission denied";
+        else if (event.error === "no-speech") msg = "No speech heard – try again";
+        else if (event.error === "network") msg = "Network error during recognition";
+        setStatus(msg, "error");
+        stopListening();
+      };
+
+      recognition.onend = () => {
+        if (isListening) stopListening();
+      };
+
+      try {
+        recognition.start();
+      } catch (e) {
+        setStatus("Could not start microphone", "error");
+        stopListening();
+      }
+    }
+
+    function stopListening() {
+      isListening = false;
+      currentSide = null;
+      btnLeft.classList.remove("listening");
+      btnRight.classList.remove("listening");
+      sideLeft.classList.remove("active-left");
+      sideRight.classList.remove("active-right");
+      if (recognition) {
+        try { recognition.stop(); } catch (_) {}
+        recognition = null;
+      }
+    }
+
+    // ---------- UI events ----------
+    btnLeft.addEventListener("click", () => startListening("left"));
+    btnRight.addEventListener("click", () => startListening("right"));
+
+    btnSwap.addEventListener("click", () => {
+      const tmp = langLeft.value;
+      langLeft.value = langRight.value;
+      langRight.value = tmp;
+      // also swap displayed text
+      const t = textLeft.textContent;
+      textLeft.textContent = textRight.textContent;
+      textRight.textContent = t;
+      setStatus("Languages swapped");
+    });
+
+    // Manual text test (no microphone required)
+    document.getElementById("btnTest").addEventListener("click", async () => {
+      const text = document.getElementById("testInput").value.trim();
+      if (!text) {
+        setStatus("Type something first", "error");
+        return;
+      }
+      const fromLang = langLeft.value;
+      const toLang = langRight.value;
+      textLeft.textContent = text;
+      textRight.textContent = "…";
+      setStatus("Translating \"" + text.slice(0,30) + "\"…");
+      try {
+        const translated = await translateText(text, fromLang, toLang);
+        if (!translated || !translated.trim()) throw new Error("Empty result");
+        textRight.textContent = translated;
+        setStatus("Speaking translation…", "success");
+        await speak(translated, toLang);
+        setStatus("Done – ready", "success");
+      } catch (err) {
+        console.error(err);
+        setStatus(err.message || "Failed", "error");
+      }
+    });
+
+    // Initial check
+    if (!SpeechRecognition) {
+      setStatus("Speech recognition requires Chrome, Edge or Safari", "error");
+      hint.textContent = "Please open this page in Chrome or Edge for the best experience.";
+    } else {
+      setStatus("Ready – pick languages and tap a 🗣️ button");
+    }
+
+    // PWA install hint
+    if ("serviceWorker" in navigator) {
+      // optional – register a tiny SW later if needed
+    }
+  </script>
+</body>
+</html>
