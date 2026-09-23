@@ -33,169 +33,119 @@
       padding: 12px;
       overflow-x: hidden;
     }
-    header {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+    header { text-align: center; margin-bottom: 8px; }
     .logo {
-      width: 96px;
-      height: 96px;
-      border-radius: 24px;
+      width: 96px; height: 96px; border-radius: 24px;
       object-fit: cover;
       box-shadow: 0 8px 24px rgba(233,69,96,0.3);
       margin-bottom: 6px;
     }
-    h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
+    h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
     h1 span { color: var(--accent); }
     .subtitle { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
 
-    /* Language selectors */
     .lang-bar {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      max-width: 480px;
+      display: flex; gap: 10px; width: 100%; max-width: 480px;
       margin: 12px 0 16px;
     }
     .lang-select {
-      flex: 1;
-      background: var(--card);
-      border: 2px solid #2a2a40;
-      border-radius: 14px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 0.95rem;
-      appearance: none;
+      flex: 1; background: var(--card); border: 2px solid #2a2a40;
+      border-radius: 14px; padding: 10px 12px; color: var(--text);
+      font-size: 0.95rem; appearance: none; cursor: pointer;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0a0b0'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      cursor: pointer;
+      background-repeat: no-repeat; background-position: right 12px center;
     }
     .lang-select:focus { outline: none; border-color: var(--accent); }
     .lang-select.left-border { border-color: var(--left); }
     .lang-select.right-border { border-color: var(--right); }
+    .lang-select:disabled { opacity: 0.55; }
 
-    /* Main area */
     .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 480px;
-      gap: 16px;
+      flex: 1; display: flex; flex-direction: column;
+      width: 100%; max-width: 480px; gap: 16px;
     }
     .side {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      border: 2px solid transparent;
-      transition: border-color 0.2s;
+      background: var(--card); border-radius: 20px; padding: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      border: 2px solid transparent; transition: border-color 0.2s;
     }
     .side.active-left { border-color: var(--left); }
     .side.active-right { border-color: var(--right); }
     .side-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted);
     }
     .speak-btn {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      border: none;
-      font-size: 3.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.15s, box-shadow 0.15s;
-      position: relative;
+      width: 130px; height: 130px; border-radius: 50%; border: none;
+      font-size: 3.2rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
       box-shadow: 0 8px 28px rgba(0,0,0,0.45);
-      color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-    .speak-btn:active { transform: scale(0.94); }
-    .speak-btn.left {
-      background: linear-gradient(145deg, #4fc3f7, #0288d1);
-    }
-    .speak-btn.right {
-      background: linear-gradient(145deg, #ff8a65, #e64a19);
-    }
-    .speak-btn.listening {
-      animation: pulse 1.2s infinite;
-    }
+    .speak-btn:active:not(:disabled) { transform: scale(0.94); }
+    .speak-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .speak-btn.left { background: linear-gradient(145deg, #4fc3f7, #0288d1); }
+    .speak-btn.right { background: linear-gradient(145deg, #ff8a65, #e64a19); }
+    .speak-btn.listening { animation: pulse 1.2s infinite; }
+    .speak-btn.busy { opacity: 0.7; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(233,69,96,0.6); }
       70% { box-shadow: 0 0 0 18px rgba(233,69,96,0); }
       100% { box-shadow: 0 0 0 0 rgba(233,69,96,0); }
     }
     .transcript {
-      width: 100%;
-      min-height: 48px;
-      background: #12121f;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      color: var(--text);
-      word-break: break-word;
+      width: 100%; min-height: 48px; background: #12121f;
+      border-radius: 12px; padding: 10px 12px; font-size: 0.95rem;
+      line-height: 1.4; color: var(--text); word-break: break-word;
     }
     .transcript .label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 2px;
+      font-size: 0.7rem; color: var(--muted); display: block; margin-bottom: 2px;
     }
     .status {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
-      min-height: 22px;
-      padding: 4px;
+      text-align: center; font-size: 0.85rem; color: var(--muted);
+      min-height: 22px; padding: 4px; max-width: 480px;
     }
     .status.error { color: var(--accent); }
     .status.success { color: var(--success); }
     .status.downloading { color: #ffd54f; }
 
-    .swap-btn {
-      align-self: center;
-      background: var(--accent2);
-      border: none;
-      color: white;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 1.3rem;
-      cursor: pointer;
+    .controls {
+      display: flex; gap: 10px; align-items: center; justify-content: center;
+      margin: 4px 0;
+    }
+    .swap-btn, .stop-btn {
+      background: var(--accent2); border: none; color: white;
+      width: 48px; height: 48px; border-radius: 50%;
+      font-size: 1.3rem; cursor: pointer;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .swap-btn:active { transform: scale(0.92); }
+    .stop-btn { background: #b71c1c; font-size: 0.85rem; font-weight: 700; }
+    .swap-btn:active, .stop-btn:active { transform: scale(0.92); }
+    .swap-btn:disabled, .stop-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    footer {
-      margin-top: 16px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-align: center;
+    .test-row {
+      width: 100%; max-width: 480px; margin-top: 12px;
+      display: flex; gap: 8px;
     }
+    .test-row input {
+      flex: 1; padding: 10px 12px; border-radius: 12px;
+      border: 2px solid #2a2a40; background: #1a1a2e; color: #eaeaea;
+      font-size: 0.95rem;
+    }
+    .test-row button {
+      padding: 10px 16px; border-radius: 12px; border: none;
+      background: #e94560; color: white; font-weight: 600; cursor: pointer;
+    }
+    .test-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+
     .hint {
-      background: #1e1e30;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      max-width: 480px;
-      text-align: center;
-      margin-bottom: 8px;
+      background: #1e1e30; border-radius: 10px; padding: 8px 12px;
+      font-size: 0.8rem; color: var(--muted); max-width: 480px;
+      text-align: center; margin-bottom: 8px;
+    }
+    footer {
+      margin-top: 16px; font-size: 0.75rem; color: var(--muted); text-align: center;
     }
   </style>
 </head>
@@ -207,7 +157,8 @@
   </header>
 
   <div class="hint" id="hint">
-    Best in <b>Chrome or Edge</b>. First use of a language may download a model (status bar shows progress). Use the Test box below if mic is not available.
+    Best in <b>Chrome or Edge</b>. Language choice is <b>saved</b> and restored next time.
+    First use may download a model. Use <b>STOP</b> if anything freezes.
   </div>
 
   <div class="lang-bar">
@@ -216,7 +167,6 @@
   </div>
 
   <div class="main">
-    <!-- LEFT SIDE -->
     <div class="side" id="sideLeft">
       <div class="side-label">Left speaker</div>
       <button class="speak-btn left" id="btnLeft" aria-label="Speak left language">🗣️</button>
@@ -226,9 +176,11 @@
       </div>
     </div>
 
-    <button class="swap-btn" id="btnSwap" title="Swap languages">⇄</button>
+    <div class="controls">
+      <button class="swap-btn" id="btnSwap" title="Swap languages">⇄</button>
+      <button class="stop-btn" id="btnStop" title="Force stop">STOP</button>
+    </div>
 
-    <!-- RIGHT SIDE -->
     <div class="side" id="sideRight">
       <div class="side-label">Right speaker</div>
       <button class="speak-btn right" id="btnRight" aria-label="Speak right language">🗣️</button>
@@ -241,19 +193,18 @@
 
   <div class="status" id="status">Ready</div>
 
-  <!-- Quick text test (no mic needed) -->
-  <div style="width:100%;max-width:480px;margin-top:12px;display:flex;gap:8px;">
-    <input id="testInput" type="text" placeholder="Type text to test translate → speak" 
-           style="flex:1;padding:10px 12px;border-radius:12px;border:2px solid #2a2a40;background:#1a1a2e;color:#eaeaea;font-size:0.95rem;" />
-    <button id="btnTest" style="padding:10px 16px;border-radius:12px;border:none;background:#e94560;color:white;font-weight:600;cursor:pointer;">Test</button>
+  <div class="test-row">
+    <input id="testInput" type="text" placeholder="Type text to test translate → speak" />
+    <button id="btnTest">Test</button>
   </div>
 
-  <footer>
-    Chit-Chat • Free • On-device speech + translation when supported
-  </footer>
+  <footer>Chit-Chat • Hardened • On-device when supported</footer>
 
   <script>
-    // ---------- Language list (common Web Speech + Translator codes) ----------
+  (function () {
+    "use strict";
+
+    // ---------- Languages ----------
     const LANGUAGES = [
       { code: "en-US", name: "English (US)", short: "en" },
       { code: "en-GB", name: "English (UK)", short: "en" },
@@ -286,258 +237,382 @@
     const btnLeft = document.getElementById("btnLeft");
     const btnRight = document.getElementById("btnRight");
     const btnSwap = document.getElementById("btnSwap");
+    const btnStop = document.getElementById("btnStop");
+    const btnTest = document.getElementById("btnTest");
+    const testInput = document.getElementById("testInput");
     const textLeft = document.getElementById("textLeft");
     const textRight = document.getElementById("textRight");
     const statusEl = document.getElementById("status");
     const sideLeft = document.getElementById("sideLeft");
     const sideRight = document.getElementById("sideRight");
-    const hint = document.getElementById("hint");
 
-    // Populate selects
     LANGUAGES.forEach(l => {
-      const o1 = new Option(l.name, l.code);
-      const o2 = new Option(l.name, l.code);
-      langLeft.add(o1);
-      langRight.add(o2);
+      langLeft.add(new Option(l.name, l.code));
+      langRight.add(new Option(l.name, l.code));
     });
-    langLeft.value = "en-US";
-    langRight.value = "es-ES";
 
-    // ---------- Helpers ----------
-    function setStatus(msg, type = "") {
-      statusEl.textContent = msg;
-      statusEl.className = "status " + type;
+    // ---------- Persist settings (localStorage – survives reopen / home screen) ----------
+    const SETTINGS_KEY = "chitchat-settings-v1";
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function saveSettings() {
+      try {
+        localStorage.setItem(
+          SETTINGS_KEY,
+          JSON.stringify({
+            langLeft: langLeft.value,
+            langRight: langRight.value,
+            savedAt: Date.now()
+          })
+        );
+      } catch (e) {
+        console.warn("Could not save settings", e);
+      }
+    }
+
+    (function restoreSettings() {
+      const s = loadSettings();
+      const leftOk = s && LANGUAGES.some(l => l.code === s.langLeft);
+      const rightOk = s && LANGUAGES.some(l => l.code === s.langRight);
+      langLeft.value = leftOk ? s.langLeft : "en-US";
+      langRight.value = rightOk ? s.langRight : "es-ES";
+    })();
+
+    langLeft.addEventListener("change", saveSettings);
+    langRight.addEventListener("change", saveSettings);
+
+    // Prefer permanent storage so settings are not evicted under pressure
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => {});
+    }
+
+    // ---------- State machine ----------
+    // idle | listening | translating | speaking
+    let state = "idle";
+    let recognition = null;
+    let speakTimeout = null;
+    let listenTimeout = null;
+    let voicesReady = false;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    function setStatus(msg, type) {
+      statusEl.textContent = msg || "";
+      statusEl.className = "status" + (type ? " " + type : "");
     }
 
     function getShort(code) {
-      const found = LANGUAGES.find(l => l.code === code);
-      return found ? found.short : code.split("-")[0];
+      const f = LANGUAGES.find(l => l.code === code);
+      return f ? f.short : (code || "").split("-")[0];
     }
 
-    // ---------- Speech Recognition ----------
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = null;
-    let isListening = false;
-    let currentSide = null; // "left" | "right"
-
-    function createRecognition(lang) {
-      if (!SpeechRecognition) {
-        setStatus("Speech recognition not supported in this browser", "error");
-        return null;
-      }
-      const rec = new SpeechRecognition();
-      rec.lang = lang;
-      rec.continuous = false;
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      return rec;
+    function setBusy(busy) {
+      btnLeft.disabled = busy;
+      btnRight.disabled = busy;
+      btnSwap.disabled = busy;
+      btnTest.disabled = busy;
+      langLeft.disabled = busy;
+      langRight.disabled = busy;
+      // STOP always enabled when not idle
+      btnStop.disabled = !busy && state === "idle";
     }
 
-    // Try to download language pack (Chrome experimental)
-    async function ensureLanguagePack(langCode) {
-      if (!window.SpeechRecognition || !SpeechRecognition.available) return true;
+    function clearUIHighlights() {
+      btnLeft.classList.remove("listening", "busy");
+      btnRight.classList.remove("listening", "busy");
+      sideLeft.classList.remove("active-left");
+      sideRight.classList.remove("active-right");
+    }
+
+    // ---------- Hard stop / recovery ----------
+    function hardStop(reason) {
       try {
-        const status = await SpeechRecognition.available({
-          langs: [langCode],
-          processLocally: true
-        });
-        if (status === "available") return true;
-        if (status === "unavailable") {
-          setStatus(`Language pack ${langCode} unavailable offline`, "error");
-          return false;
+        if (recognition) {
+          recognition.onresult = null;
+          recognition.onerror = null;
+          recognition.onend = null;
+          try { recognition.abort(); } catch (_) {}
+          try { recognition.stop(); } catch (_) {}
+          recognition = null;
         }
-        // downloading or downloadable
-        setStatus(`Downloading language pack for ${langCode}…`, "downloading");
-        const ok = await SpeechRecognition.install({ langs: [langCode], processLocally: true });
-        if (ok) {
-          setStatus(`Language pack ${langCode} ready`, "success");
-          return true;
+      } catch (_) {}
+
+      try {
+        if (window.speechSynthesis) {
+          speechSynthesis.cancel();
         }
-        setStatus(`Failed to download ${langCode}`, "error");
-        return false;
-      } catch (e) {
-        // Older browsers – ignore
-        return true;
-      }
+      } catch (_) {}
+
+      if (speakTimeout) { clearTimeout(speakTimeout); speakTimeout = null; }
+      if (listenTimeout) { clearTimeout(listenTimeout); listenTimeout = null; }
+
+      state = "idle";
+      clearUIHighlights();
+      setBusy(false);
+      btnStop.disabled = true;
+      if (reason) setStatus(reason, "error");
+      else setStatus("Stopped – ready", "success");
     }
 
-    // ---------- Translation ----------
+    // ---------- Voices ----------
+    function loadVoices() {
+      if (!window.speechSynthesis) return [];
+      let v = speechSynthesis.getVoices();
+      if (v && v.length) {
+        voicesReady = true;
+        return v;
+      }
+      return [];
+    }
+
+    if (window.speechSynthesis) {
+      loadVoices();
+      speechSynthesis.onvoiceschanged = () => {
+        loadVoices();
+        voicesReady = true;
+      };
+      // Force load on some browsers
+      setTimeout(loadVoices, 300);
+      setTimeout(loadVoices, 1000);
+    }
+
+    // ---------- Robust TTS ----------
+    function speak(text, langCode) {
+      return new Promise((resolve) => {
+        if (!window.speechSynthesis || !text) {
+          resolve();
+          return;
+        }
+
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          if (speakTimeout) { clearTimeout(speakTimeout); speakTimeout = null; }
+          resolve();
+        };
+
+        try {
+          speechSynthesis.cancel();
+        } catch (_) {}
+
+        // Small delay after cancel (Chrome quirk)
+        setTimeout(() => {
+          try {
+            const utter = new SpeechSynthesisUtterance(String(text));
+            utter.lang = langCode || "en-US";
+            utter.rate = 0.95;
+            utter.pitch = 1;
+            utter.volume = 1;
+
+            const voices = loadVoices();
+            const short = getShort(langCode);
+            const match =
+              voices.find(v => v.lang === langCode) ||
+              voices.find(v => v.lang.startsWith(langCode)) ||
+              voices.find(v => v.lang.startsWith(short)) ||
+              voices.find(v => (v.lang || "").toLowerCase().startsWith(short));
+            if (match) utter.voice = match;
+
+            utter.onend = done;
+            utter.onerror = done;
+
+            speechSynthesis.speak(utter);
+
+            // Safety: never hang longer than ~ length-based timeout
+            const ms = Math.min(20000, Math.max(4000, String(text).length * 90));
+            speakTimeout = setTimeout(done, ms);
+          } catch (e) {
+            console.warn("speak failed", e);
+            done();
+          }
+        }, 80);
+      });
+    }
+
+    // ---------- Translation (multi-fallback) ----------
     async function translateText(text, fromCode, toCode) {
       const source = getShort(fromCode);
       const target = getShort(toCode);
-      if (source === target) return text;
+      if (!text || source === target) return text;
 
-      const errors = [];
-
-      // 1. Prefer on-device Translator API (Chrome / Edge – downloads models from internet)
+      // 1) On-device Translator API
       if ("Translator" in self) {
         try {
-          setStatus("Checking on-device translator…");
-          let availability = "unavailable";
+          setStatus("On-device translator…", "downloading");
+          let avail = "unavailable";
           try {
-            availability = await Translator.availability({
+            avail = await Translator.availability({
               sourceLanguage: source,
               targetLanguage: target
             });
           } catch (_) {}
 
-          if (availability !== "unavailable") {
-            setStatus("Preparing / downloading translation model…", "downloading");
+          if (avail !== "unavailable") {
             const translator = await Translator.create({
               sourceLanguage: source,
               targetLanguage: target,
               monitor(m) {
                 m.addEventListener("downloadprogress", (e) => {
                   const pct = Math.round((e.loaded || 0) * 100);
-                  setStatus(`Downloading translation model… ${pct}%`, "downloading");
+                  setStatus("Downloading model " + pct + "%", "downloading");
                 });
               }
             });
-            const result = await translator.translate(text);
-            if (result && result.trim()) return result;
+            try {
+              const result = await translator.translate(text);
+              if (result && String(result).trim()) return String(result).trim();
+            } finally {
+              // 2026 best practice: release model resources
+              try { if (translator.destroy) translator.destroy(); } catch (_) {}
+            }
           }
         } catch (err) {
-          console.warn("Translator API failed", err);
-          errors.push("on-device: " + (err.message || err));
+          console.warn("Translator API", err);
         }
       }
 
-      // 2. Google Translate free endpoint (works in many browsers)
+      // 2) Google free endpoint
       try {
-        setStatus("Trying Google Translate…");
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
-        const res = await fetch(url);
+        setStatus("Translating…");
+        const url =
+          "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" +
+          encodeURIComponent(source) +
+          "&tl=" +
+          encodeURIComponent(target) +
+          "&dt=t&q=" +
+          encodeURIComponent(text);
+        const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data[0] && data[0][0] && data[0][0][0]) {
-            return data[0].map(item => item[0]).join("");
+          if (Array.isArray(data) && data[0]) {
+            const out = data[0].map(r => (r && r[0]) || "").join("");
+            if (out.trim()) return out.trim();
           }
-        } else {
-          errors.push("gtx status " + res.status);
         }
       } catch (e) {
-        console.warn("Google gtx failed", e);
-        errors.push("gtx: " + (e.message || e));
+        console.warn("gtx", e);
       }
 
-      // 3. MyMemory free API
+      // 3) MyMemory
       try {
-        setStatus("Trying MyMemory…");
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`;
-        const res = await fetch(url);
+        setStatus("Translating (backup)…");
+        const url =
+          "https://api.mymemory.translated.net/get?q=" +
+          encodeURIComponent(text) +
+          "&langpair=" +
+          encodeURIComponent(source + "|" + target);
+        const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
         const data = await res.json();
-        const translated = data?.responseData?.translatedText;
-        if (translated &&
-            !String(translated).includes("MYMEMORY WARNING") &&
-            !String(translated).includes("QUERY LENGTH") &&
-            translated.toLowerCase() !== text.toLowerCase()) {
-          return translated;
+        const t = data && data.responseData && data.responseData.translatedText;
+        if (
+          t &&
+          !String(t).includes("MYMEMORY WARNING") &&
+          !String(t).includes("QUERY LENGTH")
+        ) {
+          return String(t).trim();
         }
-        if (translated) errors.push("MyMemory quota or same text");
       } catch (e) {
-        console.warn("MyMemory failed", e);
-        errors.push("MyMemory: " + (e.message || e));
+        console.warn("MyMemory", e);
       }
 
-      // 4. Lingva instances (Google proxy, privacy front-ends)
-      const lingvaHosts = [
+      // 4) Lingva instances
+      const hosts = [
         "https://lingva.ml",
         "https://translate.igna.wtf",
         "https://lingva.garudalinux.org",
-        "https://translate.projectsegfau.lt",
-        "https://lingva.lunar.icu"
+        "https://translate.projectsegfau.lt"
       ];
-      for (const host of lingvaHosts) {
+      for (const host of hosts) {
         try {
-          setStatus(`Trying ${host.replace("https://","")}…`);
-          const url = `${host}/api/v1/${source}/${target}/${encodeURIComponent(text)}`;
-          const res = await fetch(url);
+          setStatus("Trying " + host.replace("https://", "") + "…");
+          const url =
+            host +
+            "/api/v1/" +
+            encodeURIComponent(source) +
+            "/" +
+            encodeURIComponent(target) +
+            "/" +
+            encodeURIComponent(text);
+          const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
           if (res.ok) {
             const data = await res.json();
-            if (data.translation && data.translation.trim() &&
-                data.translation.toLowerCase() !== text.toLowerCase()) {
-              return data.translation;
+            if (data.translation && String(data.translation).trim()) {
+              return String(data.translation).trim();
             }
           }
-        } catch (e) { /* next */ }
+        } catch (_) {}
       }
 
-      console.error("All translation methods failed", errors);
-      throw new Error("Could not translate. Open in Chrome/Edge and allow downloads, or try again later. (" + errors.slice(0,2).join("; ") + ")");
+      throw new Error("Translation failed – check internet or try Chrome/Edge");
     }
 
-    // ---------- TTS ----------
-    function speak(text, langCode) {
-      return new Promise((resolve) => {
-        if (!window.speechSynthesis) {
-          setStatus("Text-to-speech not supported", "error");
-          resolve();
-          return;
-        }
-        // Ensure voices are loaded
-        let voices = speechSynthesis.getVoices();
-        if (!voices.length) {
-          speechSynthesis.onvoiceschanged = () => {
-            voices = speechSynthesis.getVoices();
-            doSpeak();
-          };
-          // fallback timeout
-          setTimeout(() => { if (!voices.length) doSpeak(); }, 800);
-        } else {
-          doSpeak();
-        }
-
-        function doSpeak() {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = langCode;
-          utter.rate = 0.95;
-          utter.pitch = 1.0;
-          utter.volume = 1.0;
-          // Prefer a matching voice
-          const match = voices.find(v => v.lang === langCode) ||
-                        voices.find(v => v.lang.startsWith(langCode.split("-")[0])) ||
-                        voices.find(v => v.lang.startsWith(getShort(langCode)));
-          if (match) {
-            utter.voice = match;
-            console.log("Using voice:", match.name, match.lang);
-          }
-          utter.onend = () => resolve();
-          utter.onerror = (e) => {
-            console.warn("TTS error", e);
-            resolve();
-          };
-          speechSynthesis.speak(utter);
-          // Safety timeout in case onend never fires
-          setTimeout(resolve, Math.max(3000, text.length * 80));
-        }
-      });
+    // ---------- Recognition (2026: prefer on-device when possible) ----------
+    function createRecognition(lang) {
+      if (!SpeechRecognition) return null;
+      const rec = new SpeechRecognition();
+      rec.lang = lang;
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      // Prefer on-device recognition when the browser supports it
+      try {
+        if ("processLocally" in rec) rec.processLocally = true;
+      } catch (_) {}
+      return rec;
     }
 
-    // Pre-load voices
-    if (window.speechSynthesis) {
-      speechSynthesis.getVoices();
-      speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+    async function ensureSpeechLangPack(langCode) {
+      if (!SpeechRecognition || !SpeechRecognition.available) return true;
+      try {
+        const status = await SpeechRecognition.available({
+          langs: [langCode],
+          processLocally: true
+        });
+        if (status === "available") return true;
+        if (status === "unavailable") return true; // fall back to cloud
+        setStatus("Downloading speech language pack…", "downloading");
+        const ok = await SpeechRecognition.install({
+          langs: [langCode],
+          processLocally: true
+        });
+        if (ok) setStatus("Speech language pack ready", "success");
+        return true;
+      } catch (_) {
+        return true;
+      }
     }
 
-    // ---------- Core flow ----------
     async function startListening(side) {
-      if (isListening) {
-        stopListening();
+      if (state !== "idle") {
+        hardStop("Cancelled previous action");
+        // small pause then allow new start
+        await new Promise(r => setTimeout(r, 200));
+      }
+
+      if (!SpeechRecognition) {
+        setStatus("Speech recognition needs Chrome, Edge or Safari", "error");
         return;
       }
 
       const fromLang = side === "left" ? langLeft.value : langRight.value;
-      const toLang   = side === "left" ? langRight.value : langLeft.value;
+      const toLang = side === "left" ? langRight.value : langLeft.value;
 
-      // Ensure language pack
-      await ensureLanguagePack(fromLang);
+      // Best-effort: install on-device speech pack for this language
+      await ensureSpeechLangPack(fromLang);
 
-      recognition = createRecognition(fromLang);
-      if (!recognition) return;
-
-      currentSide = side;
-      isListening = true;
+      state = "listening";
+      setBusy(true);
+      clearUIHighlights();
 
       if (side === "left") {
         btnLeft.classList.add("listening");
@@ -550,130 +625,185 @@
       }
       setStatus("Listening… speak now", "success");
 
+      recognition = createRecognition(fromLang);
+      if (!recognition) {
+        hardStop("Could not start microphone");
+        return;
+      }
+
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        if (listenTimeout) {
+          clearTimeout(listenTimeout);
+          listenTimeout = null;
+        }
+      };
+
       recognition.onresult = async (event) => {
-        stopListening(); // stop the listening UI immediately
-        const transcript = (event.results[0] && event.results[0][0] && event.results[0][0].transcript || "").trim();
+        finish();
+        try {
+          recognition.onresult = null;
+          recognition.onerror = null;
+          recognition.onend = null;
+          try { recognition.stop(); } catch (_) {}
+        } catch (_) {}
+
+        const transcript = (
+          (event.results &&
+            event.results[0] &&
+            event.results[0][0] &&
+            event.results[0][0].transcript) ||
+          ""
+        ).trim();
+
         if (!transcript) {
-          setStatus("No speech detected – try again", "error");
+          hardStop("No speech heard – try again");
           return;
         }
 
-        // Show what was said on the speaking side
-        if (side === "left") {
-          textLeft.textContent = transcript;
-        } else {
-          textRight.textContent = transcript;
-        }
-        setStatus("Got: \"" + transcript.slice(0,40) + (transcript.length>40?"…":"") + "\" – Translating…");
+        // Show spoken text
+        if (side === "left") textLeft.textContent = transcript;
+        else textRight.textContent = transcript;
+
+        state = "translating";
+        clearUIHighlights();
+        btnLeft.classList.add("busy");
+        btnRight.classList.add("busy");
+        setStatus('Got: "' + transcript.slice(0, 36) + (transcript.length > 36 ? "…" : "") + '"');
 
         try {
           const translated = await translateText(transcript, fromLang, toLang);
-          if (!translated || !translated.trim()) {
-            throw new Error("Empty translation received");
-          }
+          if (!translated) throw new Error("Empty translation");
 
-          // Show translation on the opposite side
-          if (side === "left") {
-            textRight.textContent = translated;
-          } else {
-            textLeft.textContent = translated;
-          }
+          if (side === "left") textRight.textContent = translated;
+          else textLeft.textContent = translated;
 
-          setStatus("Speaking: \"" + translated.slice(0,40) + (translated.length>40?"…":"") + "\"", "success");
+          state = "speaking";
+          setStatus('Speaking: "' + translated.slice(0, 36) + (translated.length > 36 ? "…" : "") + '"', "success");
           await speak(translated, toLang);
-          setStatus("Done – ready for next", "success");
+          hardStop(); // clean reset to idle
+          setStatus("Done – ready", "success");
         } catch (err) {
           console.error(err);
-          setStatus(err.message || "Translation failed", "error");
+          hardStop(err.message || "Translation failed");
         }
       };
 
       recognition.onerror = (event) => {
+        finish();
         let msg = "Recognition error";
-        if (event.error === "not-allowed") msg = "Microphone permission denied";
-        else if (event.error === "no-speech") msg = "No speech heard – try again";
-        else if (event.error === "network") msg = "Network error during recognition";
-        setStatus(msg, "error");
-        stopListening();
+        const e = event && event.error;
+        if (e === "not-allowed") msg = "Microphone blocked – allow mic permission";
+        else if (e === "no-speech") msg = "No speech heard – try again";
+        else if (e === "aborted") msg = "Stopped";
+        else if (e === "network") msg = "Network error during recognition";
+        else if (e === "audio-capture") msg = "No microphone found";
+        hardStop(msg);
       };
 
       recognition.onend = () => {
-        if (isListening) stopListening();
+        // If we never got a result and still listening, recover
+        if (!finished && state === "listening") {
+          finish();
+          hardStop("Listening ended – try again");
+        }
       };
 
       try {
         recognition.start();
       } catch (e) {
-        setStatus("Could not start microphone", "error");
-        stopListening();
+        hardStop("Could not start microphone");
+        return;
       }
-    }
 
-    function stopListening() {
-      isListening = false;
-      currentSide = null;
-      btnLeft.classList.remove("listening");
-      btnRight.classList.remove("listening");
-      sideLeft.classList.remove("active-left");
-      sideRight.classList.remove("active-right");
-      if (recognition) {
-        try { recognition.stop(); } catch (_) {}
-        recognition = null;
-      }
+      // Safety: auto-stop after 12s of listening
+      listenTimeout = setTimeout(() => {
+        if (state === "listening") {
+          try { if (recognition) recognition.stop(); } catch (_) {}
+          hardStop("Timed out – try again");
+        }
+      }, 12000);
     }
 
     // ---------- UI events ----------
-    btnLeft.addEventListener("click", () => startListening("left"));
-    btnRight.addEventListener("click", () => startListening("right"));
+    btnLeft.addEventListener("click", () => {
+      if (state === "idle") startListening("left");
+      else hardStop("Cancelled");
+    });
+    btnRight.addEventListener("click", () => {
+      if (state === "idle") startListening("right");
+      else hardStop("Cancelled");
+    });
+
+    btnStop.addEventListener("click", () => hardStop("Stopped by user"));
 
     btnSwap.addEventListener("click", () => {
-      const tmp = langLeft.value;
+      if (state !== "idle") return;
+      const a = langLeft.value;
       langLeft.value = langRight.value;
-      langRight.value = tmp;
-      // also swap displayed text
+      langRight.value = a;
       const t = textLeft.textContent;
       textLeft.textContent = textRight.textContent;
       textRight.textContent = t;
-      setStatus("Languages swapped");
+      saveSettings();
+      setStatus("Languages swapped (saved)");
     });
 
-    // Manual text test (no microphone required)
-    document.getElementById("btnTest").addEventListener("click", async () => {
-      const text = document.getElementById("testInput").value.trim();
+    btnTest.addEventListener("click", async () => {
+      if (state !== "idle") {
+        hardStop("Cancelled");
+        await new Promise(r => setTimeout(r, 150));
+      }
+      const text = (testInput.value || "").trim();
       if (!text) {
         setStatus("Type something first", "error");
         return;
       }
+
       const fromLang = langLeft.value;
       const toLang = langRight.value;
+
+      state = "translating";
+      setBusy(true);
       textLeft.textContent = text;
       textRight.textContent = "…";
-      setStatus("Translating \"" + text.slice(0,30) + "\"…");
+      setStatus('Translating "' + text.slice(0, 30) + '"…');
+
       try {
         const translated = await translateText(text, fromLang, toLang);
-        if (!translated || !translated.trim()) throw new Error("Empty result");
+        if (!translated) throw new Error("Empty translation");
         textRight.textContent = translated;
-        setStatus("Speaking translation…", "success");
+        state = "speaking";
+        setStatus("Speaking…", "success");
         await speak(translated, toLang);
+        hardStop();
         setStatus("Done – ready", "success");
       } catch (err) {
         console.error(err);
-        setStatus(err.message || "Failed", "error");
+        hardStop(err.message || "Failed");
       }
     });
 
-    // Initial check
-    if (!SpeechRecognition) {
-      setStatus("Speech recognition requires Chrome, Edge or Safari", "error");
-      hint.textContent = "Please open this page in Chrome or Edge for the best experience.";
-    } else {
-      setStatus("Ready – pick languages and tap a 🗣️ button");
-    }
+    // Allow Enter key on test input
+    testInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") btnTest.click();
+    });
 
-    // PWA install hint
-    if ("serviceWorker" in navigator) {
-      // optional – register a tiny SW later if needed
+    // Initial
+    if (!SpeechRecognition) {
+      setStatus("Speech needs Chrome / Edge / Safari – text Test still works", "error");
+    } else {
+      setStatus("Ready – tap 🗣️ or use Test box");
     }
+    btnStop.disabled = true;
+
+    // Global safety: if page is hidden, stop everything
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && state !== "idle") hardStop("Paused");
+    });
+  })();
   </script>
 </body>
 </html>
